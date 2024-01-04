@@ -186,7 +186,7 @@ jekyll_admin:
 
 ### Switching Deployment Strategy (in DEPLOY_STRATEGY) file change the key accordingly:
 # none - For no default
-# gh-pages - For Github Pages
+  gh-pages - For Github Pages
 # firebase - For Firebase Hosting
 
 exclude:
