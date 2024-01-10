@@ -1,6 +1,6 @@
 # Site settings
 title: Your Blog
-SEOTitle: 你的博客 | Your Blog
+SEOTitle: 逃逸的兔窝 | Deviancer Blog
 header-img: img/home-bg.jpg
 email: huxpro@gmail.com
 description: ""
@@ -32,7 +32,7 @@ anchorjs: true                          # if you want to customize anchor. check
 
 # Gems
 # from PR#40, to support local preview for Jekyll 3.0
-gems: [jekyll-paginate]
+plugins: [jekyll-paginate]
 
 
 
