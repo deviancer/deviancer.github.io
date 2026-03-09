@@ -35,6 +35,25 @@ body {
     text-align: center;
 }
 
+/* 首页头像和标题 */
+.home-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.site-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+}
+
+.home-title-wrap {
+    text-align: left;
+}
+
 .site-title {
     margin: 0;
     font-size: 2em;
