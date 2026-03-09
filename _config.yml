@@ -1,108 +1,28 @@
-# Welcome to Jekyll!
-#
-# This config file is meant for settings that affect your whole blog, values
-# which you are expected to set up once and rarely need to edit after that.
-# For technical reasons, this file is *NOT* reloaded automatically when you use
-# 'jekyll serve'. If you change this file, please restart the server process.
-
-# Theme Settings - 使用 GitHub Pages 原生支持的 minima 主题
-theme: minima
-minimal_mistakes_skin: "dark"
-
-# Site Settings
-locale: "zh-CN"
+# 博客配置
 title: "逃逸的兔子窝"
-title_separator: "-"
-subtitle: "Deviancer's Blog"
 name: "Deviancer"
 description: "兔子窝里没有兔子 - 记录开发日志和生活"
 url: "https://deviancer.github.io"
-baseurl: ""
-repository: "deviancer/deviancer.github.io"
 
-# Teaser (首页展示的图片)
-teaser: "/assets/images/avatar.jpg"
+# 主题
+theme: minima
 
-# Masthead / Logo
-logo: "/assets/images/logo.png"
-masthead_title: ""
+# 作者信息
+author:
+  name: "Deviancer"
+  email: "deviancerENE@gmail.com"
+  bio: "音乐游戏爱好者，偶尔开发点奇怪的东西"
+  avatar: "/assets/images/avatar.jpg"
 
-# Breadcrumbs
-breadcrumbs: true
+# 社交链接
+github: deviancer
 
-# Pagination
+# 分页
 paginate: 10
 paginate_path: "/page:num/"
 
-# Search - 开启搜索功能
-search: true
-search_full_content: true
-
-# Build settings
-markdown: kramdown
-highlighter: rouge
+# 永久链接
 permalink: /:year/:month/:day/:title/
 
-# Exclude from processing
-exclude:
-  - Gemfile
-  - Gemfile.lock
-  - node_modules
-  - vendor/
-  - .bundle/
-  - "*.gemspec"
-  - package.json
-  - package-lock.json
-  - CNAME
-  - LICENSE
-  - README*
-  - CHANGELOG*
-  - HOW_TO*
-  - docs/
-  - test/
-  - docker/
-  - .github/ISSUE_TEMPLATE
-  - .nojekyll
-
-# Author Profile
-author:
-  name: "Deviancer"
-  bio: "音乐游戏爱好者，偶尔开发点奇怪的东西"
-  avatar: "/assets/images/avatar.jpg"
-  location: "China"
-  links:
-    - label: "Email"
-      icon: "fas fa-fw fa-envelope"
-      url: "mailto:deviancerENE@gmail.com"
-    - label: "GitHub"
-      icon: "fab fa-fw fa-github"
-      url: "https://github.com/deviancer"
-    - label: "Weibo"
-      icon: "fab fa-fw fa-weibo"
-      url: "https://weibo.com/u/6499853900"
-    - label: "Twitter"
-      icon: "fab fa-fw fa-twitter"
-      url: "https://twitter.com/IancerDev16294"
-    - label: "Facebook"
-      icon: "fab fa-fw fa-facebook"
-      url: "https://www.facebook.com/profile.php?id=100094508540867"
-
-# Social Sharing
-twitter:
-  username: "IancerDev16294"
-
-# Defaults for all posts
-defaults:
-  - scope:
-      path: ""
-      type: posts
-    values:
-      layout: post
-      author_profile: true
-      read_time: true
-      comments: false
-      share: true
-      related: true
-
-# Timezone
+# 时区
 timezone: Asia/Shanghai
