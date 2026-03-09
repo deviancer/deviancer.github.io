@@ -58,6 +58,10 @@ exclude:
   - README*
   - CHANGELOG*
   - HOW_TO*
+  - docs/
+  - test/
+  - docker/
+  - .github/ISSUE_TEMPLATE
 
 # Plugins - GitHub Pages 支持的插件
 plugins:
