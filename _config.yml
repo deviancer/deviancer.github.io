@@ -7,6 +7,9 @@ url: "https://deviancer.github.io"
 # 主题
 theme: minima
 
+# 自定义CSS
+css: "style"
+
 # 作者信息
 author:
   name: "Deviancer"
