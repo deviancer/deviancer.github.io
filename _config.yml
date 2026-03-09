@@ -65,6 +65,7 @@ plugins:
   - jekyll-sitemap
   - jekyll-feed
   - jemoji
+  - jekyll-remote-theme
 
 # Author Profile
 author:

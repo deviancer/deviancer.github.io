@@ -4,7 +4,7 @@ name: Deploy Jekyll Site
 on:
   push:
     branches:
-      - main  # 如果你使用 master 分支，改为 master
+      - main
 
 permissions:
   contents: write
@@ -20,14 +20,6 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2'
-
-      - name: Cache gems
-        uses: actions/cache@v3
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-gem-
 
       - name: Install gems
         run: |
