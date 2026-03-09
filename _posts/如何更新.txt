@@ -1,3 +1,0 @@
-git add .
-git -m commit "更新内容"
-git push origin main
