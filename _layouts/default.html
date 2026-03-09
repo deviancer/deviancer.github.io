@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: "zh-CN" }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ page.title | default: site.title }}</title>
+    <link rel="stylesheet" href="{{ "/assets/css/style.css" | relative_url }}">
+    <style>
+        /* 强制覆盖主题默认样式 */
+        body {
+            background-color: #0d1117 !important;
+            color: #c9d1d9 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <header class="site-header">
+            <h1 class="site-title"><a href="{{ "/" | relative_url }}">{{ site.title }}</a></h1>
+            {% if site.description %}
+            <p class="site-description">{{ site.description }}</p>
+            {% endif %}
+            <nav class="site-nav">
+                <a href="{{ "/" | relative_url }}">首页</a>
+                <a href="{{ "/blog/" | relative_url }}">日志</a>
+                <a href="{{ "/tags/" | relative_url }}">标签</a>
+                <a href="{{ "/categories/" | relative_url }}">分类</a>
+                <a href="{{ "/myself/" | relative_url }}">关于</a>
+            </nav>
+        </header>
+
+        <main class="page-content">
+            {{ content }}
+        </main>
+
+        <footer class="site-footer">
+            <p>&copy; {{ site.time | date: '%Y' }} {{ site.name }}. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>
