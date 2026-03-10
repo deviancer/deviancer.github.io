@@ -54,6 +54,21 @@ body {
     text-align: left;
 }
 
+/* 页面头部小头像 */
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.site-avatar-small {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+}
+
 .site-title {
     margin: 0;
     font-size: 2em;
@@ -220,6 +235,34 @@ body {
     background: var(--link-color);
     color: var(--bg-color);
     text-decoration: none;
+}
+
+/* 文章头部和底部 */
+.post-header {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.post-header .post-title {
+    margin: 0 0 10px 0;
+    font-size: 1.8em;
+    color: #f0f6fc;
+}
+
+.post-footer {
+    margin-top: 30px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
+
+.post-tags-bottom {
+    margin: 0;
+    color: var(--muted-color);
+}
+
+.post-tags-bottom .tag {
+    margin-left: 8px;
 }
 
 /* 页脚 */

@@ -22,7 +22,12 @@
                 </div>
             </div>
             {% else %}
-            <h1 class="site-title"><a href="{{ "/" | relative_url }}">{{ site.title }}</a></h1>
+            <div class="page-header">
+                {% if site.author.avatar %}
+                <img src="{{ site.author.avatar | relative_url }}" alt="avatar" class="site-avatar-small">
+                {% endif %}
+                <h1 class="site-title"><a href="{{ "/" | relative_url }}">{{ site.title }}</a></h1>
+            </div>
             {% if site.description %}
             <p class="site-description">{{ site.description }}</p>
             {% endif %}

@@ -10,16 +10,15 @@ layout: default
              | 分类: {% for category in page.categories %}{{ category }}{% endfor %}
             {% endif %}
         </p>
-        {% if page.tags %}
-        <div class="post-tags">
-            {% for tag in page.tags %}
-            <span class="tag">{{ tag }}</span>
-            {% endfor %}
-        </div>
-        {% endif %}
     </header>
 
     <div class="post-content">
         {{ content }}
     </div>
+
+    {% if page.tags %}
+    <footer class="post-footer">
+        <p class="post-tags-bottom">TAG: {% for tag in page.tags %}<span class="tag">{{ tag }}</span>{% endfor %}</p>
+    </footer>
+    {% endif %}
 </article>
