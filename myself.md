@@ -1,9 +1,7 @@
 ---
-layout: single
+layout: page
 title: 个人简介
 permalink: /myself/
-author_profile: true
-classes: wide
 ---
 
 # 关于我

@@ -1,53 +1,31 @@
 ---
-layout: collection
+layout: page
 title: 标签
-collection: tags
-permalink: /tags/
 ---
 
-<p>所有标签列表，点击标签查看相关文章：</p>
+<p>所有标签列表：</p>
 
-{% capture site_tags %}{% for tag in site.tags %}{{ tag | first }}{% unless forloop.last %},{% endunless %}{% endfor %}{% endcapture %}
-{% assign sorted_tags = site_tags | split:',' | sort %}
-
+{% if site.tags %}
 <div class="tag-cloud">
-{% for tag in sorted_tags %}
-  <a href="{{ site.url }}{{ site.baseurl }}/tags/#{{ tag }}" class="tag-link" title="{{ tag }}">#{{ tag }}</a>
+{% for tag in site.tags %}
+  <a href="#{{ tag[0] }}" class="tag-label">{{ tag[0] }}</a>
 {% endfor %}
 </div>
-
-<style>
-.tag-cloud {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: 20px 0;
-}
-.tag-link {
-  padding: 5px 12px;
-  background: #333;
-  border-radius: 4px;
-  text-decoration: none;
-  color: #fff;
-  font-size: 14px;
-  transition: background 0.3s;
-}
-.tag-link:hover {
-  background: #5a5a5a;
-}
-</style>
 
 <hr>
 
 <h2>按标签浏览文章</h2>
 
-{% for tag in sorted_tags %}
-<section id="{{ tag }}">
-  <h3>#{{ tag }}</h3>
+{% for tag in site.tags %}
+<section id="{{ tag[0] }}">
+  <h3>{{ tag[0] }}</h3>
   <ul>
-  {% for post in site.tags[tag] %}
-    <li><a href="{{ post.url }}">{{ post.title }}</a> - <span class="entry-date"><time datetime="{{ post.date | date_to_xmlschema }}" itemprop="datePublished">{{ post.date | date: "%Y年%m月%d日" }}</time></span></li>
+  {% for post in tag[1] %}
+    <li><a href="{{ post.url | relative_url }}">{{ post.title }}</a> - <time>{{ post.date | date: "%Y年%m月%d日" }}</time></li>
   {% endfor %}
   </ul>
 </section>
 {% endfor %}
+{% else %}
+<p>暂无标签</p>
+{% endif %}

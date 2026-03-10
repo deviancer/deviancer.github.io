@@ -1,9 +1,7 @@
 ---
-layout: single
+layout: page
 title: 资源
 permalink: /resource/
-author_profile: false
-classes: wide
 ---
 
 # 资源分享
