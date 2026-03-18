@@ -17,3 +17,6 @@ main:
   - title: "个人简介"
     url: /myself/
     icon: "fas fa-user"
+  - title: "计时"
+    url: /time/
+    icon: "fas fa-clock"
