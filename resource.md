@@ -8,11 +8,9 @@ permalink: /resource/
 
 这里收录了一些我收集和整理的开发资源。
 
-## 开发工具
+## 逃逸的小工具
 
-- [Git](https://git-scm.com/) - 版本控制系统
-- [VS Code](https://code.visualstudio.com/) - 代码编辑器
-- [Docker](https://www.docker.com/) - 容器化平台
+- [Gitadora九宫格BINGO](/gitadora_nine_grid) - 九宫格生成器
 
 ## 学习资源
 

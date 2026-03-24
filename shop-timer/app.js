@@ -1,18 +1,19 @@
 /**
- * 店铺计时系统 - 核心应用逻辑
+ * 宝岛音游社计时工具 - 核心应用逻辑
  *
  * 功能模块：
  * 1. 设备识别（localStorage UUID）
  * 2. 状态管理（idle / active / done）
  * 3. Supabase 数据交互
  * 4. 实时计时器
+ * 5. 价格计算
  */
 
 // ============================================================
 // 配置 - 请替换为你的 Supabase 项目信息
 // ============================================================
-const SUPABASE_URL = 'YOUR_SUPABASE_URL';       // 例如: https://xxxxx.supabase.co
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // 公开匿名 Key
+const SUPABASE_URL = 'https://kfuranvinblagbtsfucj.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtmdXJhbnZpbmJsYWdidHNmdWNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NzA5MjgsImV4cCI6MjA4OTM0NjkyOH0.qzkRC-lRhxjMkRjOY0NJlzDCm5ERd6YNT2TroaaC7r4';
 
 // ============================================================
 // 全局状态
@@ -42,6 +43,7 @@ const DOM = {
     doneStartTime: null,
     doneEndTime: null,
     durationDisplay: null,
+    priceAmount: null,
     privacyWarning: null,
     errorToast: null,
 };
@@ -62,6 +64,7 @@ function initDOM() {
     DOM.doneStartTime = $('#done-start-time');
     DOM.doneEndTime = $('#done-end-time');
     DOM.durationDisplay = $('#duration-display');
+    DOM.priceAmount = $('#price-amount');
     DOM.privacyWarning = $('#privacy-warning');
     DOM.errorToast = $('#error-toast');
 }
@@ -77,12 +80,21 @@ async function init() {
     // 初始化设备 ID
     deviceId = getOrCreateDeviceId();
 
+    // 检查 Supabase SDK 是否加载成功
+    if (typeof supabase === 'undefined' || typeof supabase.createClient !== 'function') {
+        console.error('Supabase SDK 未加载，请检查网络连接');
+        showError('页面资源加载失败，请刷新重试');
+        showView('idle');
+        return;
+    }
+
     // 初始化 Supabase 客户端
     try {
         supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     } catch (err) {
         showError('系统初始化失败，请刷新重试');
         console.error('Supabase init error:', err);
+        showView('idle');
         return;
     }
 
@@ -91,8 +103,17 @@ async function init() {
     DOM.stopBtn.addEventListener('click', handleStop);
     DOM.restartBtn.addEventListener('click', handleRestart);
 
-    // 查询当前状态
-    await checkCurrentStatus();
+    // 查询当前状态（带超时保护）
+    try {
+        const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('请求超时')), 10000)
+        );
+        await Promise.race([checkCurrentStatus(), timeoutPromise]);
+    } catch (err) {
+        console.error('初始化超时:', err);
+        showError('加载超时，请检查网络后刷新');
+        showView('idle');
+    }
 }
 
 // ============================================================
@@ -220,6 +241,10 @@ function showDoneView(record) {
     // 显示总时长
     DOM.durationDisplay.textContent = '总计 ' + formatDuration(diffMs);
 
+    // 计算并显示价格
+    const spending = calculatePrice(diffMs);
+    DOM.priceAmount.textContent = '￥' + spending;
+
     // 显示入场/离场时间
     DOM.doneStartTime.textContent = '入场：' + formatTime(startTime);
     DOM.doneEndTime.textContent = '离场：' + formatTime(endTime);
@@ -267,9 +292,17 @@ async function handleStop() {
     stopTimer();
 
     try {
+        const endTimeISO = new Date().toISOString();
+
+        // 计算消费金额
+        const startTime = new Date(activeRecord.start_time);
+        const endTime = new Date(endTimeISO);
+        const diffMs = endTime - startTime;
+        const spending = calculatePrice(diffMs);
+
         const { data, error } = await supabaseClient
             .from('checkin_records')
-            .update({ end_time: new Date().toISOString() })
+            .update({ end_time: endTimeISO, spending: spending })
             .eq('id', activeRecord.id)
             .select()
             .single();
@@ -319,6 +352,35 @@ function stopTimer() {
         clearInterval(timerInterval);
         timerInterval = null;
     }
+}
+
+// ============================================================
+// 价格计算
+// ============================================================
+
+/**
+ * 根据时长计算价格（四舍五入到小时，以30分钟为界）
+ * 不满半小时向下取整，半小时及以上向上取整
+ * 例：1h20m → 1小时，1h32m → 2小时
+ *
+ * 1小时 17元 | 2小时 32元 | 3小时 45元
+ * 4小时 56元 | 5小时 65元 | 6小时及以上 72元
+ */
+const PRICE_TABLE = [17, 32, 45, 56, 65, 72];
+
+function calculatePrice(ms) {
+    const totalMinutes = Math.floor(ms / 60000);
+    const fullHours = Math.floor(totalMinutes / 60);
+    const remainingMinutes = totalMinutes % 60;
+
+    let hours = fullHours;
+    if (remainingMinutes >= 30) {
+        hours += 1; // 半小时及以上，向上进一位
+    }
+
+    if (hours <= 0) hours = 1; // 最少按 1 小时计
+    if (hours >= 6) return PRICE_TABLE[5];
+    return PRICE_TABLE[hours - 1];
 }
 
 // ============================================================
