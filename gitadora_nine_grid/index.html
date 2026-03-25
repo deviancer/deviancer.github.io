@@ -675,7 +675,7 @@
   <div class="grid-panel">
     <div class="bingo-header">
       <div class="title-row">
-        <span class="title-static" id="displayTitle">GITADORA 的九宫格</span>
+        <span class="title-static" id="displayTitle">GITADORA 九宫格</span>
       </div>
       <div class="bingo-subtitle">用你最喜欢的曲目创建九宫格吧!</div>
     </div>
@@ -805,7 +805,7 @@
 
   // ============== Init ==============
   async function init() {
-    const resp = await fetch('songs.json');
+    const resp = await fetch('songs.json?v=' + Date.now());
     allSongs = await resp.json();
     buildLetterGrid(titleLetterGrid, 'main-title', 'letter-btn');
     buildLetterGrid(artistLetterGrid, 'main-artist', 'letter-btn');
@@ -1202,7 +1202,7 @@
     ctx.fillStyle = '#f7fafc';
     ctx.fillRect(0, 0, totalW, totalH);
 
-    const titleText = (titleInput.value || 'GITADORA') + ' 的九宫格';
+    const titleText = (titleInput.value || 'GITADORA') + ' 九宫格';
     ctx.fillStyle = '#2d3748';
     ctx.font = 'bold 28px "Segoe UI", "Noto Sans SC", sans-serif';
     ctx.textAlign = 'center';
@@ -1345,7 +1345,7 @@
   // ============== Event Bindings ==============
   function bindEvents() {
     titleInput.addEventListener('input', () => {
-      displayTitle.textContent = (titleInput.value || 'GITADORA') + ' 的九宫格';
+      displayTitle.textContent = (titleInput.value || 'GITADORA') + ' 九宫格';
     });
 
     searchInput.addEventListener('input', applyFilters);
