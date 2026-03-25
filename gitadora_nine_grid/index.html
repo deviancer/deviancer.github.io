@@ -345,14 +345,17 @@
   .grid-cell.filled {
     cursor: grab;
     border-color: transparent;
+    display: flex;
+    flex-direction: column;
   }
   .grid-cell.filled:active { cursor: grabbing; }
   .grid-cell.filled .cell-cover {
     width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
+    flex: 1;
+    min-height: 0;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius) var(--radius) 0 0;
   }
   .grid-cell.filled .cell-cover img {
     width: 100%;
@@ -360,47 +363,77 @@
     object-fit: cover;
   }
   .grid-cell.filled .cell-info {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(transparent, rgba(0,0,0,0.75));
-    padding: 24px 8px 6px;
-    color: #fff;
+    width: 100%;
+    padding: 6px 8px;
+    background: var(--card-bg);
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
   }
-  .grid-cell.filled .cell-info .cell-title {
+  .grid-cell.filled .cell-info-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     font-size: 11px;
+  }
+  .grid-cell.filled .cell-info-row.top .cell-title {
+    flex: 1;
     font-weight: 600;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: var(--text);
   }
-  .grid-cell.filled .cell-info .cell-artist {
-    font-size: 9px;
-    opacity: 0.85;
+  .grid-cell.filled .cell-info-row.bottom .cell-artist {
+    flex: 1;
+    font-size: 10px;
+    color: var(--text-secondary);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  .grid-cell.filled .cell-selects {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .grid-cell.filled .cell-selects select {
+    font-size: 9px;
+    padding: 2px 4px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    background: #fff;
+    color: var(--text);
+    cursor: pointer;
+  }
+  .grid-cell.filled .cell-selects .cell-level {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--primary);
+    min-width: 32px;
+    text-align: right;
+  }
   .grid-cell.filled .cell-remove {
     position: absolute;
-    top: 4px;
-    right: 4px;
-    width: 22px;
-    height: 22px;
+    top: 6px;
+    right: 6px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.6);
     color: #fff;
     border: none;
     cursor: pointer;
-    font-size: 14px;
-    line-height: 22px;
+    font-size: 18px;
+    line-height: 26px;
     text-align: center;
     opacity: 0;
-    transition: opacity 0.2s;
+    transition: opacity 0.2s, transform 0.15s;
+    z-index: 10;
   }
   .grid-cell.filled:hover .cell-remove { opacity: 1; }
-  .grid-cell.filled .cell-remove:hover { background: var(--accent); }
+  .grid-cell.filled .cell-remove:hover { background: var(--accent); transform: scale(1.15); }
 
   .grid-hint {
     font-size: 12px;
@@ -585,7 +618,7 @@
       <h3><span class="num">1</span> 标题设定</h3>
       <div style="display:flex;align-items:center;gap:4px;">
         <input class="search-input" id="titleInput" type="text" value="GITADORA" maxlength="20" placeholder="输入标题..." style="flex:1;">
-        <span style="font-size:14px;font-weight:600;color:var(--primary);">的九宫格</span>
+        <span style="font-size:14px;font-weight:600;color:var(--primary);">九宫格</span>
       </div>
     </div>
 
@@ -730,6 +763,7 @@
 
   // ============== State ==============
   let allSongs = [];
+  // Each slot: { song: songObj, mode: 'drum', diff: 'master' } or null
   let gridSlots = [null, null, null, null, null, null, null, null, null];
 
   // Main panel letter states
@@ -955,7 +989,7 @@
 
   // ============== Song List Rendering ==============
   function isInGrid(songId) {
-    return gridSlots.some(s => s && s.id === songId);
+    return gridSlots.some(s => s && s.song && s.song.id === songId);
   }
 
   function renderSongList(container, songs, mode) {
@@ -994,18 +1028,17 @@
 
   // ============== Grid ==============
   function addSongToGrid(song) {
-    if (isInGrid(song.id)) return;
+    // Find first empty slot, allow duplicates
     const emptyIdx = gridSlots.findIndex(s => s === null);
     if (emptyIdx === -1) return;
-    gridSlots[emptyIdx] = song;
+    gridSlots[emptyIdx] = { song: song, mode: 'drum', diff: 'master' };
     renderGrid();
     applyFilters();
   }
 
   function addSongToGridAt(song, index) {
     if (index < 0 || index > 8) return;
-    if (isInGrid(song.id)) return;
-    gridSlots[index] = song;
+    gridSlots[index] = { song: song, mode: 'drum', diff: 'master' };
     renderGrid();
     applyFilters();
   }
@@ -1016,23 +1049,77 @@
     applyFilters();
   }
 
+  function getSongLevel(slot) {
+    if (!slot || !slot.song) return '';
+    const lv = slot.song.difficulties[slot.mode] && slot.song.difficulties[slot.mode][slot.diff];
+    return lv !== undefined && lv !== null ? lv.toFixed(2) : '---';
+  }
+
+  function updateSlotMode(index, newMode) {
+    if (gridSlots[index]) {
+      gridSlots[index].mode = newMode;
+      renderGrid();
+    }
+  }
+
+  function updateSlotDiff(index, newDiff) {
+    if (gridSlots[index]) {
+      gridSlots[index].diff = newDiff;
+      renderGrid();
+    }
+  }
+
   function renderGrid() {
     bingoGrid.innerHTML = '';
-    gridSlots.forEach((song, index) => {
+    gridSlots.forEach((slot, index) => {
       const cell = document.createElement('div');
-      cell.className = 'grid-cell ' + (song ? 'filled' : 'empty');
+      cell.className = 'grid-cell ' + (slot ? 'filled' : 'empty');
       cell.dataset.index = index;
 
-      if (song) {
+      if (slot) {
+        const song = slot.song;
         cell.draggable = true;
         cell.innerHTML = `
           <div class="cell-cover"><img src="${song.cover}" alt="" draggable="false"></div>
           <div class="cell-info">
-            <div class="cell-title">${escapeHtml(song.title)}</div>
-            <div class="cell-artist">${escapeHtml(song.artist)}</div>
+            <div class="cell-info-row top">
+              <div class="cell-title">${escapeHtml(song.title)}</div>
+              <div class="cell-selects">
+                <select data-field="mode" data-index="${index}">
+                  <option value="guitar" ${slot.mode === 'guitar' ? 'selected' : ''}>Guitar</option>
+                  <option value="drum" ${slot.mode === 'drum' ? 'selected' : ''}>Drum</option>
+                  <option value="bass" ${slot.mode === 'bass' ? 'selected' : ''}>Bass</option>
+                </select>
+              </div>
+            </div>
+            <div class="cell-info-row bottom">
+              <div class="cell-artist">${escapeHtml(song.artist)}</div>
+              <div class="cell-selects">
+                <select data-field="diff" data-index="${index}">
+                  <option value="basic" ${slot.diff === 'basic' ? 'selected' : ''}>BAS</option>
+                  <option value="advanced" ${slot.diff === 'advanced' ? 'selected' : ''}>ADV</option>
+                  <option value="extreme" ${slot.diff === 'extreme' ? 'selected' : ''}>EXT</option>
+                  <option value="master" ${slot.diff === 'master' ? 'selected' : ''}>MAS</option>
+                </select>
+                <span class="cell-level">${getSongLevel(slot)}</span>
+              </div>
+            </div>
           </div>
           <button class="cell-remove" title="移除">&times;</button>
         `;
+        // Bind mode/diff change
+        cell.querySelectorAll('select').forEach(sel => {
+          sel.addEventListener('change', (e) => {
+            const field = e.target.dataset.field;
+            if (field === 'mode') {
+              updateSlotMode(index, e.target.value);
+            } else if (field === 'diff') {
+              updateSlotDiff(index, e.target.value);
+            }
+          });
+          // Prevent drag when clicking select
+          sel.addEventListener('mousedown', (e) => e.stopPropagation());
+        });
         cell.querySelector('.cell-remove').addEventListener('click', (e) => {
           e.stopPropagation();
           removeSongFromGrid(index);
@@ -1048,7 +1135,7 @@
 
       // Drag events
       cell.addEventListener('dragstart', (e) => {
-        if (!song) { e.preventDefault(); return; }
+        if (!slot) { e.preventDefault(); return; }
         e.dataTransfer.setData('text/plain', String(index));
         cell.classList.add('dragging');
       });
@@ -1100,12 +1187,14 @@
   async function exportImage() {
     const canvas = document.createElement('canvas');
     const cellSize = 200;
+    const infoHeight = 44;
+    const cellFullHeight = cellSize + infoHeight;
     const gap = 10;
     const padding = 30;
     const headerHeight = 80;
     const footerHeight = 30;
     const totalW = padding * 2 + cellSize * 3 + gap * 2;
-    const totalH = padding + headerHeight + cellSize * 3 + gap * 2 + footerHeight + padding;
+    const totalH = padding + headerHeight + cellFullHeight * 3 + gap * 2 + footerHeight + padding;
     canvas.width = totalW;
     canvas.height = totalH;
     const ctx = canvas.getContext('2d');
@@ -1122,7 +1211,7 @@
     const gridX = padding;
     const gridY = padding + headerHeight;
     ctx.fillStyle = '#edf2f7';
-    roundRect(ctx, gridX - 8, gridY - 8, cellSize * 3 + gap * 2 + 16, cellSize * 3 + gap * 2 + 16, 10);
+    roundRect(ctx, gridX - 8, gridY - 8, cellSize * 3 + gap * 2 + 16, cellFullHeight * 3 + gap * 2 + 16, 10);
     ctx.fill();
 
     const imagePromises = [];
@@ -1130,40 +1219,63 @@
       for (let col = 0; col < 3; col++) {
         const idx = row * 3 + col;
         const x = gridX + col * (cellSize + gap);
-        const y = gridY + row * (cellSize + gap);
-        const song = gridSlots[idx];
+        const y = gridY + row * (cellFullHeight + gap);
+        const slot = gridSlots[idx];
 
         ctx.fillStyle = '#ffffff';
-        roundRect(ctx, x, y, cellSize, cellSize, 6);
+        roundRect(ctx, x, y, cellSize, cellFullHeight, 6);
         ctx.fill();
 
-        if (song) {
+        if (slot) {
+          const song = slot.song;
           const imgPromise = loadImage(song.cover).then(img => {
             ctx.save();
+            // Image area (top part)
             roundRect(ctx, x, y, cellSize, cellSize, 6);
             ctx.clip();
             ctx.drawImage(img, x, y, cellSize, cellSize);
-            const grad = ctx.createLinearGradient(x, y + cellSize - 50, x, y + cellSize);
-            grad.addColorStop(0, 'rgba(0,0,0,0)');
-            grad.addColorStop(1, 'rgba(0,0,0,0.7)');
-            ctx.fillStyle = grad;
-            ctx.fillRect(x, y + cellSize - 50, cellSize, 50);
-            ctx.fillStyle = '#fff';
-            ctx.font = 'bold 12px "Segoe UI", "Noto Sans SC", sans-serif';
-            ctx.textAlign = 'left';
-            ctx.fillText(truncText(ctx, song.title, cellSize - 12), x + 6, y + cellSize - 18);
-            ctx.font = '10px "Segoe UI", "Noto Sans SC", sans-serif';
-            ctx.globalAlpha = 0.85;
-            ctx.fillText(truncText(ctx, song.artist, cellSize - 12), x + 6, y + cellSize - 6);
-            ctx.globalAlpha = 1;
             ctx.restore();
+
+            // Info area (bottom)
+            const infoY = y + cellSize;
+            ctx.fillStyle = '#ffffff';
+            roundRect(ctx, x, infoY, cellSize, infoHeight, 6);
+            ctx.fill();
+            ctx.strokeStyle = '#e2e8f0';
+            roundRect(ctx, x, infoY, cellSize, infoHeight, 6);
+            ctx.stroke();
+
+            // Title (left) + Mode (right)
+            ctx.fillStyle = '#1a202c';
+            ctx.font = 'bold 11px "Segoe UI", "Noto Sans SC", sans-serif';
+            ctx.textAlign = 'left';
+            const modeLabel = slot.mode.charAt(0).toUpperCase() + slot.mode.slice(1);
+            ctx.fillText(truncText(ctx, song.title, cellSize - 60), x + 6, infoY + 14);
+            ctx.fillStyle = '#718096';
+            ctx.font = '9px "Segoe UI", "Noto Sans SC", sans-serif';
+            ctx.textAlign = 'right';
+            ctx.fillText(modeLabel, x + cellSize - 6, infoY + 14);
+
+            // Artist (left) + Diff + Level (right)
+            ctx.fillStyle = '#718096';
+            ctx.font = '10px "Segoe UI", "Noto Sans SC", sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText(truncText(ctx, song.artist, cellSize - 70), x + 6, infoY + 28);
+
+            const diffLabel = DIFF_LABELS[slot.diff] || slot.diff.toUpperCase();
+            const levelVal = getSongLevel(slot);
+            ctx.textAlign = 'right';
+            ctx.fillStyle = '#2d3748';
+            ctx.font = 'bold 10px "Segoe UI", "Noto Sans SC", sans-serif';
+            ctx.fillText(diffLabel + ' ' + levelVal, x + cellSize - 6, infoY + 28);
           }).catch(() => {
             ctx.fillStyle = '#e2e8f0';
-            roundRect(ctx, x, y, cellSize, cellSize, 6);
+            roundRect(ctx, x, y, cellSize, cellFullHeight, 6);
             ctx.fill();
           });
           imagePromises.push(imgPromise);
         } else {
+          // Empty cell - only show + in image area
           ctx.fillStyle = '#a0aec0';
           ctx.font = '32px sans-serif';
           ctx.textAlign = 'center';
