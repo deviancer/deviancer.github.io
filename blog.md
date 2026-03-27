@@ -9,13 +9,13 @@ title: 日志
 {% for post in site.posts %}
   <li class="post-item">
     <a href="{{ post.url | relative_url }}" class="post-link">
-      <h2 class="post-title">{{ post.title }}</h2>
-      <p class="post-meta">
-        <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%Y年%m月%d日" }}</time>
-        {% if post.tags %}
-         | 标签: {% for tag in post.tags %}{{ tag }}{% endfor %}
-        {% endif %}
-      </p>
+      <div class="post-title-row">
+        <h2 class="post-title">{{ post.title }}</h2>
+        <time class="post-date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%Y年%m月%d日" }}</time>
+      </div>
+      {% if post.tags %}
+      <p class="post-tags-row">{% for tag in post.tags %}<span class="tag">{{ tag }}</span>{% endfor %}</p>
+      {% endif %}
     </a>
   </li>
 {% endfor %}

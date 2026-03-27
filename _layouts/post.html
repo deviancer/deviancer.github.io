@@ -6,6 +6,9 @@ layout: default
         <h1 class="post-title">{{ page.title }}</h1>
         <p class="post-meta">
             <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%Y年%m月%d日" }}</time>
+            {% if page.updated %}
+            <span class="updated">（更新: {{ page.updated | date: "%Y年%m月%d日" }}）</span>
+            {% endif %}
             {% if page.categories %}
              | 分类: {% for category in page.categories %}{{ category }}{% endfor %}
             {% endif %}
@@ -18,7 +21,9 @@ layout: default
 
     {% if page.tags %}
     <footer class="post-footer">
-        <p class="post-tags-bottom">TAG: {% for tag in page.tags %}<span class="tag">{{ tag }}</span>{% endfor %}</p>
+        <p class="post-tags-bottom">
+        {% for tag in page.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
+        </p>
     </footer>
     {% endif %}
 </article>

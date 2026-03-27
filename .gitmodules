@@ -1,0 +1,6 @@
+[submodule "shop-timer"]
+	path = shop-timer
+	url = https://github.com/deviancer/shop-timer.git
+[submodule "gitadora_nine_grid"]
+	path = gitadora_nine_grid
+	url = https://github.com/deviancer/gitadora_nine_grid.git
