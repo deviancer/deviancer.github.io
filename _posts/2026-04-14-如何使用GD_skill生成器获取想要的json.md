@@ -9,6 +9,8 @@ categories: 技术
 
 ## 操作步骤
 
+> https://gd-scoretable.onrender.com/
+
 ### 1. 导入 JSON 帮助文件
 
 点击右上角的 **导入**，依次选择 **导入 JSON** 和 **JSON 帮助**。
