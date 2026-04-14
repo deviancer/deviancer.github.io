@@ -10,14 +10,14 @@ permalink: /myself/
 
 ## 我是谁
 
-- 🎵 音乐游戏爱好者 (SOUND VOLTEX)
+- 🎵 音乐游戏爱好者 (B系音游，Sega系列偶尔玩玩)
 - 💻 偶尔开发点奇怪的东西
 - 🔧 喜欢修修好弟弟
 
 ## 技能树
 
-- 编程语言: Python, JavaScript, etc.
-- 游戏: SOUND VOLTEX, etc.
+- 编程语言: C++, C#, 还有一点点python
+- 游戏: SOUND VOLTEX,Gitadora,Pop'n Music, etc.
 
 ## 联系我
 
