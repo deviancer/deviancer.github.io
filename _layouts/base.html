@@ -1,25 +1,45 @@
----
-layout: none
----
 <!DOCTYPE html>
 {%- include snippets/get-lang.html -%}
-<html lang="{{ __return }}">
+<html lang="{{ __return | default: 'zh-CN' }}">
   <head>
     {%- include analytics.html -%}
     {%- include head.html -%}
-    <script>
-      {%- include scripts/utils/utils.js -%}
-      {%- include scripts/lib/throttle.js -%}
-      {%- include scripts/lib/lazyload.js -%}
-    </script>
-    {%- include scripts/variables.html -%}
   </head>
-  <body>
-    <div class="root" data-is-touch="false">
-      {{ content }}
+  <body class="site-body">
+    <div class="site-shell">
+      <aside class="site-sidebar" id="site-sidebar">
+        <div class="sidebar-topline">
+          <a class="brand" href="{{ '/' | relative_url }}" aria-label="返回首页"><span class="brand-mark">/</span> DEVIANCER / 兔子窝</a>
+          <button class="sidebar-close" type="button" data-sidebar-close aria-label="关闭导航">×</button>
+        </div>
+        <div class="sidebar-profile">
+          <div class="avatar avatar--sidebar"><span class="avatar-fallback">DV</span><img src="{{ site.author.avatar }}" alt="{{ site.author.name }}" loading="lazy" onerror="this.style.display='none'"></div>
+          <p class="sidebar-kicker">PERSONAL LOG / 2026</p>
+          <h2>{{ site.author.name }}</h2>
+          <p>{{ site.author.bio }}</p>
+        </div>
+        <nav class="site-nav" aria-label="主导航">
+          <a class="site-nav__link{% if page.url == '/' %} is-active{% endif %}" href="{{ '/' | relative_url }}"><span>01</span>主页</a>
+          <a class="site-nav__link{% if page.url contains '/blog' or page.layout == 'article' or page.layout == 'post' %} is-active{% endif %}" href="{{ '/blog.html' | relative_url }}"><span>02</span>博客</a>
+          <a class="site-nav__link{% if page.url contains '/projects' %} is-active{% endif %}" href="{{ '/projects.html' | relative_url }}"><span>03</span>项目</a>
+          <a class="site-nav__link{% if page.url contains '/resources' %} is-active{% endif %}" href="{{ '/resources.html' | relative_url }}"><span>04</span>资源</a>
+          <a class="site-nav__link{% if page.url contains '/about' %} is-active{% endif %}" href="{{ '/about.html' | relative_url }}"><span>05</span>关于我</a>
+        </nav>
+        <div class="sidebar-bottom">
+          <div class="status-line"><span class="status-dot"></span> OPEN TO IDEAS</div>
+          <div class="sidebar-links"><a href="https://github.com/{{ site.author.github }}" target="_blank" rel="noreferrer">GitHub ↗</a>{%- if site.author.email -%}<a href="mailto:{{ site.author.email }}">Email ↗</a>{%- endif -%}</div>
+          <p class="sidebar-note">把想法写下来，把作品留下来。</p>
+        </div>
+      </aside>
+      <main class="site-main">
+        <header class="mobile-header"><a class="brand" href="{{ '/' | relative_url }}"><span class="brand-mark">/</span> DEVIANCER / 兔子窝</a><button class="menu-toggle" type="button" data-sidebar-open aria-label="打开导航"><span></span><span></span></button></header>
+        <div class="site-content">{{ content }}</div>
+        <footer class="site-footer"><span>© {{ 'now' | date: '%Y' }} {{ site.author.name }}</span><span>Built with curiosity · Hosted on GitHub Pages</span></footer>
+      </main>
     </div>
+    <div class="sidebar-scrim" data-sidebar-close></div>
     <script>
-      {%- include scripts/common.js -%}
+      (function () { var body = document.body; document.querySelectorAll('[data-sidebar-open]').forEach(function (el) { el.addEventListener('click', function () { body.classList.add('sidebar-is-open'); }); }); document.querySelectorAll('[data-sidebar-close]').forEach(function (el) { el.addEventListener('click', function () { body.classList.remove('sidebar-is-open'); }); }); }());
     </script>
   </body>
 </html>

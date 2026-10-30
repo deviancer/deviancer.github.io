@@ -1,0 +1,4 @@
+---
+layout: base
+---
+<section class="section-page profile-page"><header class="section-header"><p class="eyebrow">05 / ABOUT</p><h1>关于我</h1><p>一份还在持续更新的自我介绍。</p></header><div class="profile-layout"><div class="profile-large-avatar avatar"><span class="avatar-fallback">DV</span><img src="{{ site.author.avatar }}" alt="{{ site.author.name }}" onerror="this.style.display='none'"></div><div class="profile-copy"><p class="profile-lead">我是 {{ site.author.name }}，正在用这个网站整理自己的工作、学习和生活观察。</p>{{ content }}<div class="profile-actions"><a class="button button--primary" href="https://github.com/{{ site.author.github }}" target="_blank" rel="noreferrer">GitHub ↗</a>{% if site.author.email %}<a class="button button--ghost" href="mailto:{{ site.author.email }}">发邮件</a>{% endif %}</div></div></div></section>

@@ -1,0 +1,4 @@
+---
+layout: base
+---
+<section class="section-page"><header class="section-header"><p class="eyebrow">02 / BLOG</p><h1>{{ page.title | default: '博客' }}</h1><p>记录实践过程，也记录还没想明白的问题。文章会保持短小、具体、可回看。</p></header><div class="blog-list">{%- for post in site.posts -%}<article class="blog-card"><div class="blog-card__meta"><time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%Y.%m.%d' }}</time><span>{{ post.tags | default: 'NOTE' }}</span></div><div class="blog-card__body"><h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2><p>{{ post.excerpt | strip_html | strip_newlines | strip | truncate: 180 }}</p></div><a class="blog-card__arrow" href="{{ post.url | relative_url }}" aria-label="阅读 {{ post.title }}">↗</a></article>{%- endfor -%}</div></section>

@@ -16,6 +16,7 @@ node_modules/
 
 /.bundle/
 /vendor/bundle
+/.ruby-gems/
 *.gem
 
 yarn.lock
