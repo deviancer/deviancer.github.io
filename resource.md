@@ -1,21 +1,8 @@
 ---
-layout: page
+layout: section
 title: 资源
+eyebrow: 04 / RESOURCES
+intro: 我在工作、学习和写作时会反复使用的东西。先从一份轻量清单开始，之后可以继续按主题扩展。
 permalink: /resource/
 ---
-
-# 资源分享
-
-这里收录了一些我的开发项目和我的主页。
-
-## 逃逸的小工具
-
-- [Gitadora九宫格BINGO](/gitadora_nine_grid) - 九宫格生成器
-- [宝岛计时工具](https://timer.deviancer.top) - 计时工具
-
-## 我的主页
-
-- [逃逸的b站主页](https://space.bilibili.com/1452852) - BiliBili
-- [逃逸的github](https://github.com/deviancer/) - Github
-
-> 持续更新中...
+{% include resource-links.html %}

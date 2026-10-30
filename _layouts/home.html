@@ -1,7 +1,15 @@
 ---
-layout: default
+layout: base
 ---
-
-<div class="home-content">
-    {{ content }}
-</div>
+<section class="home-hero">
+  <div class="hero-copy">
+    <p class="eyebrow">你好，这里是我的数字花园 <span>✳</span></p>
+    <h1>把正在思考的事，<br><em>做成看得见的东西。</em></h1>
+    <p class="hero-lede">我是 {{ site.author.name }}。我喜欢音乐游戏，也会在业余时间写点小工具、做点奇怪的实验，把过程记录下来。</p>
+    <div class="hero-actions"><a class="button button--primary" href="{{ '/blog.html' | relative_url }}">阅读博客 <span>→</span></a><a class="text-link" href="{{ '/about.html' | relative_url }}">了解我 <span>↗</span></a></div>
+  </div>
+  <div class="hero-portrait-wrap"><div class="hero-orbit hero-orbit--one"></div><div class="hero-orbit hero-orbit--two"></div><div class="avatar avatar--hero"><span class="avatar-fallback">DV</span><img src="{{ site.author.avatar }}" alt="{{ site.author.name }}" onerror="this.style.display='none'"></div><span class="portrait-caption">DEVIANCER / MAKER</span></div>
+</section>
+<section class="home-grid home-grid--intro"><div class="section-label"><span>01</span> CURRENTLY</div><div class="intro-panel"><p class="intro-title">在音游、代码和生活之间，留一点自己的节奏。</p><p class="intro-body">这里会收录开发日志、音乐游戏记录、正在做的小工具，以及借助 AI 把想法落地的过程。</p><div class="topic-list"><span>Music Games</span><span>Small Tools</span><span>AI Assisted Making</span></div></div></section>
+<section class="home-grid home-grid--posts"><div class="section-label"><span>02</span> LATEST NOTES <a href="{{ '/blog.html' | relative_url }}">全部文章 ↗</a></div><div class="post-stack">{%- assign recent_posts = site.posts | slice: 0, 3 -%}{%- for post in recent_posts -%}<a class="post-row" href="{{ post.url | relative_url }}"><span class="post-row__date">{{ post.date | date: '%Y.%m.%d' }}</span><span class="post-row__title">{{ post.title }}</span><span class="post-row__arrow">↗</span></a>{%- endfor -%}{%- if recent_posts.size == 0 -%}<p class="empty-state">第一篇文章正在路上。</p>{%- endif -%}</div></section>
+<section class="home-grid home-grid--cards"><div class="section-label"><span>03</span> EXPLORE</div><div class="explore-cards"><a class="explore-card explore-card--warm" href="{{ '/projects.html' | relative_url }}"><span class="card-index">03 / PROJECTS</span><strong>正在做的项目</strong><span class="card-arrow">↗</span></a><a class="explore-card explore-card--cool" href="{{ '/resources.html' | relative_url }}"><span class="card-index">04 / RESOURCES</span><strong>反复使用的资源</strong><span class="card-arrow">↗</span></a></div></section>
